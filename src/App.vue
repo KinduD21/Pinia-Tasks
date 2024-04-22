@@ -31,22 +31,36 @@
       >
         Fav tasks
       </button>
+      <button
+        @click="$reset"
+        class="ml-2.5 inline-block rounded border-2 border-solid border-gray-500 bg-white px-2 py-1"
+      >
+        Reset state
+      </button>
     </nav>
+
+    <!-- loading -->
+    <div
+      v-if="loading"
+      class="mx-auto my-6 max-w-2xl border border-yellow-300 bg-yellow-200 py-1 text-center text-gray-600"
+    >
+      Loading tasks...
+    </div>
 
     <!-- task list -->
     <ul v-if="filter === 'all'" class="mx-auto my-5 max-w-2xl">
-      <p>You have {{ taskStore.totalCount }} tasks left to do</p>
+      <p>You have {{ totalCount }} task(s) left to do</p>
       <li
-        v-for="task in taskStore.tasks"
+        v-for="task in tasks"
         class="mt-5 flex items-center justify-between rounded bg-white p-5 shadow-md"
       >
         <TaskDetails :task="task" />
       </li>
     </ul>
     <ul v-if="filter === 'favs'" class="mx-auto my-5 max-w-2xl">
-      <p>You have {{ taskStore.favCount }} favs left to do</p>
+      <p>You have {{ favCount }} favs left to do</p>
       <li
-        v-for="task in taskStore.favs"
+        v-for="task in favs"
         class="mt-5 flex items-center justify-between rounded bg-white p-5 shadow-md"
       >
         <TaskDetails :task="task" />
@@ -60,8 +74,11 @@ import { ref } from "vue";
 import TaskDetails from "./components/TaskDetails.vue";
 import { useTaskStore } from "./stores/TaskStore";
 import TaskForm from "./components/TaskForm.vue";
+import { storeToRefs } from "pinia";
 
 const taskStore = useTaskStore();
+
+const { tasks, loading, favs, totalCount, favCount } = storeToRefs(taskStore);
 
 const filter = ref("all");
 </script>
